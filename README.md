@@ -7,5 +7,5 @@ This repository contains example scripts for processing **Global Reservoir Obser
 
 **For an interactive interface of the dataset (Google Earth Engine App), please see :** https://ee-zmy18888536368.projects.earthengine.app/view/growl
 
-**For downloading all the GROWL dataset, please visit this link:** https://figshare.com/s/2354ff22105599637130
+**For downloading all the GROWL dataset, please visit this link:**https://doi.org/10.6084/m9.figshare.31225405.v1
 
