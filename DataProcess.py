@@ -124,8 +124,7 @@ def flag_by_adaptive_z(g, col, flag_col, win=90, min_periods=90, q=0.99, multipl
 # Monotonic consistency between Level & Storage — FLAG_Suspect
 # ------------------------------------------------------------------------------
 
-def flag_storage_to_level(df, level_col="level", storage_col="storage", flag_level_col="flag_level",
-                          flag_storage_col="flag_storage"):
+def flag_storage_to_level(df, level_col="level", storage_col="storage", flag_level_col="flag_level", flag_storage_col="flag_storage"):
     out = df.copy()
     for col in [flag_level_col, flag_storage_col]:
         out[col] = out[col].fillna(0).astype(int)
@@ -155,12 +154,9 @@ def flag_storage_to_level(df, level_col="level", storage_col="storage", flag_lev
     return out
 
 
-def flag_level_to_storage(df, level_col="level", storage_col="storage", flag_level_col="flag_level",
-                          flag_storage_col="flag_storage", abs_tol=0.1, rel_tol=0.002, side_k=5,
-                          require_both_sides=True):
+def flag_level_to_storage(df, level_col="level", storage_col="storage", flag_level_col="flag_level", flag_storage_col="flag_storage", abs_tol=0.1, rel_tol=0.002, side_k=5, require_both_sides=True):
     g = df.copy()
-    mask_ok = g[level_col].notna() & g[storage_col].notna() & g[flag_storage_col].eq(FLAG_Good) & g[flag_level_col].eq(
-        FLAG_Good)
+    mask_ok = g[level_col].notna() & g[storage_col].notna() & g[flag_storage_col].eq(FLAG_Good) & g[flag_level_col].eq(FLAG_Good)
     if mask_ok.sum() <= 2:
         return g
 
@@ -222,8 +218,7 @@ def flag_by_consecutive_equals(g, col, flag_col, min_run=5):
 # Cross-variable completion thought monotonic mapping — FLAG_Interpolated
 # ------------------------------------------------------------------------------
 
-def fill_by_counterpart(df, level_col="level", storage_col="storage", flag_level_col="flag_level",
-                        flag_storage_col="flag_storage"):
+def fill_by_counterpart(df, level_col="level", storage_col="storage", flag_level_col="flag_level", flag_storage_col="flag_storage"):
     g = df.copy()
     clean_both = g[flag_level_col].eq(FLAG_Good) & g[flag_storage_col].eq(FLAG_Good)
 
@@ -452,8 +447,7 @@ def qc_level_and_storage(df, station_col, date_col, level_col, storage_col):
     g.loc[g["flag_level"].isin([FLAG_Erroneous, FLAG_Suspect]), "level"] = np.nan
     g.loc[g["flag_storage"].isin([FLAG_Erroneous, FLAG_Suspect]), "storage"] = np.nan
 
-    g = flag_storage_to_level(g, level_col="level", storage_col="storage", flag_level_col="flag_level",
-                              flag_storage_col="flag_storage")
+    g = flag_storage_to_level(g, level_col="level", storage_col="storage", flag_level_col="flag_level", flag_storage_col="flag_storage")
 
     g.loc[g["flag_level"].isin([FLAG_Erroneous, FLAG_Suspect]), "level"] = np.nan
     g.loc[g["flag_storage"].isin([FLAG_Erroneous, FLAG_Suspect]), "storage"] = np.nan
@@ -470,8 +464,7 @@ def qc_level_and_storage(df, station_col, date_col, level_col, storage_col):
 
     g = fill_by_counterpart(g)
 
-    g = fill_level_from_storage(g, storage_col="storage", level_col="level", flag_level_col="flag_level",
-                                storage_tol=1e-6)
+    g = fill_level_from_storage(g, storage_col="storage", level_col="level", flag_level_col="flag_level", storage_tol=1e-6)
 
     g = final_time_interp(g, val_col="level", flag_col="flag_level", limit=max_gap)
     g = fill_by_counterpart(g)
@@ -487,3 +480,4 @@ def qc_level_and_storage(df, station_col, date_col, level_col, storage_col):
     cols_out = ["id", "date", "level_raw", "flag_level", "level", "storage_raw", "flag_storage", "storage"]
 
     return g[cols_out]
+
